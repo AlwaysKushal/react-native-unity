@@ -123,7 +123,21 @@ If you're using expo, you're done. The built-in expo plugin will handle the rest
    ```javascript
    <string name="game_view_content_description">Game view</string>
    ```
+5. Optional (Unity 6 Only) to `node_modules/@azesmway/react-native-unity/android/src/main/java/<your/package/path>/UPlayer.java`
 
+  ***Inside the UPlayer class, find the method named requestFrame() and replace its contents with the following implementation:***
+```Java
+public FrameLayout requestFrame() throws NoSuchMethodException {
+    try {
+        Method getFrameLayout = unityPlayer.getClass().getMethod("getFrameLayout");
+        return (FrameLayout) getFrameLayout.invoke(unityPlayer);
+    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        // For Unity 6 compatibility, replace unityPlayer reference with null
+        return null;
+    }
+}
+```
+  
 # Known issues
 
 - Does not work on the iOS simulator.
